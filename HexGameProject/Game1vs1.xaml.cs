@@ -14,6 +14,7 @@ using System.Windows.Shapes;
 using System.Collections;
 using System.IO;
 using System.Windows.Threading;
+using System.Threading;
 
 namespace HexGameProject
 {
@@ -56,7 +57,7 @@ namespace HexGameProject
                 }
             }
         }
-        private async  void Button_Click(object sender, RoutedEventArgs e)
+        private async void Button_Click(object sender, RoutedEventArgs e)
         {
             int row = Grid.GetRow(sender as Button);
             int column = Grid.GetColumn(sender as Button);
@@ -67,11 +68,11 @@ namespace HexGameProject
             if (winner == "red" || winner == "blue")
             { 
                 if (winner == "red")
-                {
+                {                 
                     foreach (Button b in winWayRed)
                     {
                         b.Background = Brushes.Green;
-                        await Task.Delay(500);
+                        await Task.Delay(500);   
                     }
 
                     while (winWayRed.Count>0)
@@ -84,12 +85,12 @@ namespace HexGameProject
                     foreach (Button b in winWayBlue)
                     {
                         b.Background = Brushes.Green;
+                        await Task.Delay(500);
                     }
 
                     while (winWayBlue.Count > 0)
                     {
                         winWayBlue.Dequeue();
-                        await Task.Delay(500);
                     }
                 }
                 this.Hide();
@@ -444,6 +445,7 @@ namespace HexGameProject
 
         private void Button_Click_2(object sender, RoutedEventArgs e)
         {
+            this.colorPlayer = "red";
             resetIsCheckedBord();
             resetGrid();
             reserUndoStack();

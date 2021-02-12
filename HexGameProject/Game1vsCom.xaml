@@ -399,6 +399,7 @@
                 </LinearGradientBrush>
             </Button.Background>
         </Button>
+        <Label Name="comTurn_lbl" FontSize="14" FontWeight="Bold" Content="Loading *" HorizontalAlignment="Left" Margin="355,42,0,0" VerticalAlignment="Top" Width="87"/>
 
 
     </Grid>

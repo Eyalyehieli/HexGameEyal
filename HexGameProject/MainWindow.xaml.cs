@@ -31,7 +31,6 @@ namespace HexGameProject
             Game1vs1 game1Vs1 = new Game1vs1("red");
             game1Vs1.ShowDialog();
             this.Visibility = Visibility.Visible;
-
         }
 
         private void Button_Click_1(object sender, RoutedEventArgs e)
