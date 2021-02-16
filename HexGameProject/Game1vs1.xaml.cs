@@ -59,6 +59,7 @@ namespace HexGameProject
         }
         private async void Button_Click(object sender, RoutedEventArgs e)
         {
+           
             int row = Grid.GetRow(sender as Button);
             int column = Grid.GetColumn(sender as Button);
             bord[row, column] = this.colorPlayer;

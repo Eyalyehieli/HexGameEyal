@@ -25,6 +25,7 @@ namespace HexGameProject
         string[,] bord;
         bool[,] isChekedBord;
         string winner;
+        string[,] evaluatingBoard;
         Stack<Button> undo = new Stack<Button>();
         Queue<Button> winWayRed = new Queue<Button>();
         Queue<Button> winWayBlue = new Queue<Button>();
@@ -35,12 +36,13 @@ namespace HexGameProject
             this.Player = player;
             bord = new string[11, 11];
             isChekedBord = new bool[11, 11];
+            evaluatingBoard = new string[11, 11];
             resetIsCheckedBord();
         }
 
         private void resetIsCheckedBord()
         {
-            for (int i = 0; i < 11; i++)
+            for (int i = 0; i < 1; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
@@ -130,7 +132,9 @@ namespace HexGameProject
             changingTurn();
             undo.Push(bestButton);
         }
-        int maxSequence(string[,] board,string playerColor,int r,int c)
+
+        
+        public int maxSequence1(string[,] board,string playerColor,int r,int c)
         {
             int i,j, count = -1,maxCount=-1 ;
             
@@ -181,9 +185,49 @@ namespace HexGameProject
                 count++;
             }
             maxCount = Math.Max(count, maxCount);
+            coppyBoardToEvaluatingBoard(board);
             return maxCount;
         }
+        
+        public int maxSequence(string[,] board,string playerColor,int r,int c)
+        {
+            int i = r, j = c;
+            if (r<0||r>10||c<0||c>10||board[r,c]!=playerColor)
+            {
+                return 0;
+            }
+            board[r, c] = null;
+            i = r; j = c;
+            int left = maxSequence(board, playerColor, i, --j);
+            i = r; j = c;
+            int right = maxSequence(board, playerColor, i, ++j);
+            i = r; j = c;
+            int up = maxSequence(board, playerColor, --i, j);
+            i = r; j = c;
+            int down = maxSequence(board, playerColor, ++i, j);
+            i = r; j = c;
+            int downRightDiagonal = maxSequence(board, playerColor, ++i, ++j);
+            i = r; j = c;
+            int downLeftDiagonal = maxSequence(board, playerColor, ++i, --j);
+            i = r; j = c;
+            int upLeftDiagonal = maxSequence(board, playerColor, --i, --j);
+            i = r; j = c;
+            int upRightDiagonal = maxSequence(board, playerColor, --i, ++j);
+            return 1 + Math.Max(left, (Math.Max(right, Math.Max(up, Math.Max(down, Math.Max(downRightDiagonal,
+            Math.Max(downLeftDiagonal, Math.Max(upLeftDiagonal, upRightDiagonal))))))));
+        }
 
+        public void coppyBoardToEvaluatingBoard(string[,] board)
+        {
+
+            for (int i = 0; i < 11; i++)
+            {
+                for (int j = 0; j < 11; j++)
+                {
+                    evaluatingBoard[i, j] = board[i, j]; 
+                }
+            }
+        }
         int findSequence(string[,] board,string playerColor)
         {
             int countSeq=0, maxCountSeq = 0;
@@ -193,14 +237,15 @@ namespace HexGameProject
                 {
                     if(board[i,j]==playerColor)
                     {
-                        countSeq = maxSequence(board, playerColor, i, j);
+                        coppyBoardToEvaluatingBoard(board);
+                        countSeq = maxSequence(evaluatingBoard, playerColor, i, j);
                     }
                     maxCountSeq = Math.Max(countSeq, maxCountSeq);
                 }
             }
             return maxCountSeq;
         }
-
+        
         public int staticEvaluateBoard(string [,] board)
         {
             int redPlayerGrade = 0, bluePlayerGrade = 0;
