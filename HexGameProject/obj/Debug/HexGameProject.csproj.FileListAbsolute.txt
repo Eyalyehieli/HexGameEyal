@@ -21,3 +21,26 @@ C:\Eyal Yehieli\הנדסאי יג\HexProject\HexGameProject\HexGameProject\obj\D
 C:\Eyal Yehieli\הנדסאי יג\HexProject\HexGameProject\HexGameProject\obj\Debug\WinnerMessage.baml
 C:\Eyal Yehieli\הנדסאי יג\HexProject\HexGameProject\HexGameProject\obj\Debug\Game1vsCom.g.cs
 C:\Eyal Yehieli\הנדסאי יג\HexProject\HexGameProject\HexGameProject\obj\Debug\Game1vsCom.baml
+C:\HexGame\HexGameProject\bin\Debug\HexGameProject.exe.config
+C:\HexGame\HexGameProject\bin\Debug\HexGameProject.exe
+C:\HexGame\HexGameProject\bin\Debug\HexGameProject.pdb
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject.csprojAssemblyReference.cache
+C:\HexGame\HexGameProject\obj\Debug\Game1vs1.g.cs
+C:\HexGame\HexGameProject\obj\Debug\Game1vsCom.g.cs
+C:\HexGame\HexGameProject\obj\Debug\Levels.g.cs
+C:\HexGame\HexGameProject\obj\Debug\MainWindow.g.cs
+C:\HexGame\HexGameProject\obj\Debug\WinnerMessage.g.cs
+C:\HexGame\HexGameProject\obj\Debug\App.g.cs
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject_MarkupCompile.cache
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject_MarkupCompile.lref
+C:\HexGame\HexGameProject\obj\Debug\Game1vs1.baml
+C:\HexGame\HexGameProject\obj\Debug\Game1vsCom.baml
+C:\HexGame\HexGameProject\obj\Debug\Levels.baml
+C:\HexGame\HexGameProject\obj\Debug\MainWindow.baml
+C:\HexGame\HexGameProject\obj\Debug\WinnerMessage.baml
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject.g.resources
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject.Properties.Resources.resources
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject.csproj.GenerateResource.cache
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject.csproj.CoreCompileInputs.cache
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject.exe
+C:\HexGame\HexGameProject\obj\Debug\HexGameProject.pdb

@@ -130,11 +130,83 @@ namespace HexGameProject
             changingTurn();
             undo.Push(bestButton);
         }
+        int maxSequence(string[,] board,string playerColor,int r,int c)
+        {
+            int i,j, count = -1,maxCount=-1 ;
+            
+            for(i=c;i<11&&board[r,i]==playerColor;i++)//1
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            count = -1;
+            for(i=c; i>-1&& board[r, i] == playerColor;i--)//2
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            count = -1;
+            for(i=r;i<11&&board[i,c]==playerColor;i++)//3
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            count = -1;
+            for(i=r;i>-1&&board[i,c]==playerColor;i--)//4
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            count = -1;
+            for(i=r,j=c;i<11&&j<11&&board[i,j]==playerColor;i++,j++)//5
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            count = -1;
+            for(i = r, j = c; i >-1 && j >-1 && board[i, j] == playerColor; i--, j--)//6
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            count = -1;
+            for (i = r, j = c; i > -1 && j <11 && board[i, j] == playerColor; i--, j++)//7
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            count = -1;
+            for (i = r, j = c; i <11 && j>-1 && board[i, j] == playerColor; i++, j--)//8
+            {
+                count++;
+            }
+            maxCount = Math.Max(count, maxCount);
+            return maxCount;
+        }
+
+        int findSequence(string[,] board,string playerColor)
+        {
+            int countSeq=0, maxCountSeq = 0;
+            for(int i=0;i<11;i++)
+            {
+                for(int j=0;j<11;j++)
+                {
+                    if(board[i,j]==playerColor)
+                    {
+                        countSeq = maxSequence(board, playerColor, i, j);
+                    }
+                    maxCountSeq = Math.Max(countSeq, maxCountSeq);
+                }
+            }
+            return maxCountSeq;
+        }
 
         public int staticEvaluateBoard(string [,] board)
         {
-            int value = 10;
-            return value;
+            int redPlayerGrade = 0, bluePlayerGrade = 0;
+            redPlayerGrade = findSequence(board, "red");
+            bluePlayerGrade = findSequence(board, "blue");
+            return 10*(bluePlayerGrade - redPlayerGrade);
         }
 
 
