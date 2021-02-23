@@ -19,8 +19,10 @@ namespace HexGameProject
     /// <summary>
     /// Interaction logic for Game1vsCom.xaml
     /// </summary>
+    /// 
     public partial class Game1vsCom : Window
     {
+        
         string Player;//which player need to play
         string[,] bord;
         bool[,] isChekedBord;
@@ -40,9 +42,12 @@ namespace HexGameProject
             resetIsCheckedBord();
         }
 
+        
+
+
         private void resetIsCheckedBord()
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < 11; i++)
             {
                 for (int j = 0; j < 11; j++)
                 {
@@ -66,7 +71,7 @@ namespace HexGameProject
 
         private async void bestMove()
         {
-            int depth = 3;
+            int depth = 1;
             int bestScore = -Int32.MaxValue;
             int[] move = new int[2];
             for (int i = 0; i < 11; i++)
@@ -94,24 +99,9 @@ namespace HexGameProject
             }
             bestButton.IsEnabled = false;
             bord[move[0], move[1]] = "blue";
-            winner = thereIsWinner(bestButton,11,-1);
-            if (/*winner == "red" ||*/ winner == "blue")
+            winner = thereIsWinner(bestButton);
+            if ( winner == "blue")
             {
-                //if (winner == "red")
-                //{
-                //    foreach (Button b in winWayRed)
-                //    {
-                //        b.Background = Brushes.Green;
-                //        await Task.Delay(500);
-                //    }
-
-                //    while (winWayRed.Count > 0)
-                //    {
-                //        winWayRed.Dequeue();
-                //    }
-                //}
-                //else
-                //{
                 foreach (Button b in winWayBlue)
                 {
                     b.Background = Brushes.Green;
@@ -134,85 +124,23 @@ namespace HexGameProject
         }
 
         
-        public int maxSequence1(string[,] board,string playerColor,int r,int c)
-        {
-            int i,j, count = -1,maxCount=-1 ;
-            
-            for(i=c;i<11&&board[r,i]==playerColor;i++)//1
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            count = -1;
-            for(i=c; i>-1&& board[r, i] == playerColor;i--)//2
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            count = -1;
-            for(i=r;i<11&&board[i,c]==playerColor;i++)//3
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            count = -1;
-            for(i=r;i>-1&&board[i,c]==playerColor;i--)//4
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            count = -1;
-            for(i=r,j=c;i<11&&j<11&&board[i,j]==playerColor;i++,j++)//5
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            count = -1;
-            for(i = r, j = c; i >-1 && j >-1 && board[i, j] == playerColor; i--, j--)//6
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            count = -1;
-            for (i = r, j = c; i > -1 && j <11 && board[i, j] == playerColor; i--, j++)//7
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            count = -1;
-            for (i = r, j = c; i <11 && j>-1 && board[i, j] == playerColor; i++, j--)//8
-            {
-                count++;
-            }
-            maxCount = Math.Max(count, maxCount);
-            coppyBoardToEvaluatingBoard(board);
-            return maxCount;
-        }
+       
         
         public int maxSequence(string[,] board,string playerColor,int r,int c)
         {
-            int i = r, j = c;
             if (r<0||r>10||c<0||c>10||board[r,c]!=playerColor)
             {
                 return 0;
             }
             board[r, c] = null;
-            i = r; j = c;
-            int left = maxSequence(board, playerColor, i, --j);
-            i = r; j = c;
-            int right = maxSequence(board, playerColor, i, ++j);
-            i = r; j = c;
-            int up = maxSequence(board, playerColor, --i, j);
-            i = r; j = c;
-            int down = maxSequence(board, playerColor, ++i, j);
-            i = r; j = c;
-            int downRightDiagonal = maxSequence(board, playerColor, ++i, ++j);
-            i = r; j = c;
-            int downLeftDiagonal = maxSequence(board, playerColor, ++i, --j);
-            i = r; j = c;
-            int upLeftDiagonal = maxSequence(board, playerColor, --i, --j);
-            i = r; j = c;
-            int upRightDiagonal = maxSequence(board, playerColor, --i, ++j);
+            int left = maxSequence(board, playerColor, r, c-1);
+            int right = maxSequence(board, playerColor, r, c+1);
+            int up = maxSequence(board, playerColor, r-1, c);
+            int down = maxSequence(board, playerColor, r+1, c);
+            int downRightDiagonal = maxSequence(board, playerColor, r+1, c+1);
+            int downLeftDiagonal = maxSequence(board, playerColor, r+1, c-1);
+            int upLeftDiagonal = maxSequence(board, playerColor, r-1, c-1);
+            int upRightDiagonal = maxSequence(board, playerColor, r-1, c+1);
             return 1 + Math.Max(left, (Math.Max(right, Math.Max(up, Math.Max(down, Math.Max(downRightDiagonal,
             Math.Max(downLeftDiagonal, Math.Max(upLeftDiagonal, upRightDiagonal))))))));
         }
@@ -245,13 +173,21 @@ namespace HexGameProject
             }
             return maxCountSeq;
         }
+        bool check_pos(Position p)
+        {
+            if(p.x>10||p.x<0||p.y>10||p.y<0)
+            {
+                return false;
+            }
+            return true;
+        }
+
         
         public int staticEvaluateBoard(string [,] board)
         {
-            int redPlayerGrade = 0, bluePlayerGrade = 0;
-            redPlayerGrade = findSequence(board, "red");
-            bluePlayerGrade = findSequence(board, "blue");
-            return 10*(bluePlayerGrade - redPlayerGrade);
+            int seqeuenceRed = 10*findSequence(board,"red");
+            int sequenceBlue = 10*findSequence(board,"blue");
+            return (sequenceBlue-seqeuenceRed);
         }
 
 
@@ -267,8 +203,8 @@ namespace HexGameProject
             //{
             //return evaluateScore;
             //}
-            string result = thereIsWinner(r, c, 11, -1);
-            if (result != null)
+            string result = thereIsWinner(findButtonByIndex(r,c));
+            if (result != "")
             {
                 return result == "blue" ? 100 : -100; //blue=aiPlayer
             }
@@ -325,7 +261,7 @@ namespace HexGameProject
             int column = Grid.GetColumn(sender as Button);
             bord[row, column] = this.Player;
             paintingButton(sender as Button);
-            winner = thereIsWinner(sender as Button,11,-1);
+            winner = thereIsWinner(sender as Button);
             (sender as Button).IsEnabled = false;
             if (winner == "red") /*|| winner == "blue")*/
             {
@@ -390,15 +326,15 @@ namespace HexGameProject
         }
 
 
-        private string thereIsWinner(Button button,int maxDepth,int minDepth)
+        private string thereIsWinner(Button button)
         {
             resetIsCheckedBord();
             bool redWinnerUp = false, redWinnerDown = false, blueWinnerLeft = false, blueWinnerRight = false;
             if (this.Player == "red")
             {
-                redWinnerUp = redCheckingWinnerUp(Grid.GetRow(button), Grid.GetColumn(button),-1);
+                redWinnerUp = redCheckingWinnerUp(Grid.GetRow(button), Grid.GetColumn(button));
                 isChekedBord[Grid.GetRow(button), Grid.GetColumn(button)] = false;
-                redWinnerDown = redCheckingWinnerDown(Grid.GetRow(button), Grid.GetColumn(button),11);
+                redWinnerDown = redCheckingWinnerDown(Grid.GetRow(button), Grid.GetColumn(button));
                 if (redWinnerDown && redWinnerUp)
                 {
                     return "red";
@@ -413,9 +349,9 @@ namespace HexGameProject
             }
             else
             {
-                blueWinnerLeft = blueCheckingWinnerLeft(Grid.GetRow(button), Grid.GetColumn(button),11);
+                blueWinnerLeft = blueCheckingWinnerLeft(Grid.GetRow(button), Grid.GetColumn(button));
                 isChekedBord[Grid.GetRow(button), Grid.GetColumn(button)] = false;
-                blueWinnerRight = blueCheckingWinnerRight(Grid.GetRow(button), Grid.GetColumn(button),-1);
+                blueWinnerRight = blueCheckingWinnerRight(Grid.GetRow(button), Grid.GetColumn(button));
                 if (blueWinnerLeft && blueWinnerRight)
                 {
                     return "blue";
@@ -430,53 +366,8 @@ namespace HexGameProject
             }
             return "";
         }
-
-        private string thereIsWinner(int i,int j,int maxDepth,int minDepth)
-        {
-            resetIsCheckedBord();
-            bool redWinnerUp = false, redWinnerDown = false, blueWinnerLeft = false, blueWinnerRight = false;
-            if (this.Player == "red")
-            {
-                redWinnerUp = redCheckingWinnerUp(i,j,-1);
-                isChekedBord[i,j] = false;
-                redWinnerDown = redCheckingWinnerDown(i,j,11);
-                if (redWinnerDown && redWinnerUp)
-                {
-                    while (winWayRed.Count > 0)
-                    {
-                        winWayRed.Dequeue();
-                    }
-                    return "red";
-                }
-                while (winWayRed.Count > 0)
-                {
-                    winWayRed.Dequeue();
-                }
-
-            }
-            else
-            {
-                blueWinnerLeft = blueCheckingWinnerLeft(i,j,11);
-                isChekedBord[i,j] = false;
-                blueWinnerRight = blueCheckingWinnerRight(i,j,-1);
-                if (blueWinnerLeft && blueWinnerRight)
-                {
-                    while (winWayBlue.Count > 0)
-                    {
-                        winWayBlue.Dequeue();
-                    }
-                    return "blue";
-                }
-
-                while (winWayBlue.Count > 0)
-                {
-                    winWayBlue.Dequeue();
-                }
-               
-            }
-            return null;
-        }
-        private bool redCheckingWinnerDown(int i, int j,int depth)
+       
+        private bool redCheckingWinnerDown(int i, int j)
         {
             int plusJ = j + 1;
             int minusJ = j - 1;
@@ -484,7 +375,7 @@ namespace HexGameProject
             bool minusJchecking = false;
             bool plusJhorchecking = false;
             bool minusJhorChecking = false;
-            if (i == depth)
+            if (i == 11)
             {
                 return true;
             }
@@ -499,21 +390,21 @@ namespace HexGameProject
             }
             if (plusJ >= 0 && plusJ <= 10)
             {
-                plusJchecking = redCheckingWinnerDown(i + 1, j + 1,depth);
+                plusJchecking = redCheckingWinnerDown(i + 1, j + 1);
                 if (bord[i, j + 1] == "red" && isChekedBord[i, j + 1] == false)
                 {
-                    plusJhorchecking = redCheckingWinnerDown(i, j + 1,depth);
+                    plusJhorchecking = redCheckingWinnerDown(i, j + 1);
                 }
             }
             if (minusJ >= 0 && minusJ <= 10)
             {
-                minusJchecking = redCheckingWinnerDown(i + 1, j - 1,depth);
+                minusJchecking = redCheckingWinnerDown(i + 1, j - 1);
                 if (bord[i, j - 1] == "red" && isChekedBord[i, j - 1] == false)
                 {
-                    minusJhorChecking = redCheckingWinnerDown(i, j - 1,depth);
+                    minusJhorChecking = redCheckingWinnerDown(i, j - 1);
                 }
             }
-            bool ret= plusJchecking || redCheckingWinnerDown(i + 1, j,depth) || minusJchecking || minusJhorChecking || plusJhorchecking;
+            bool ret= plusJchecking || redCheckingWinnerDown(i + 1, j) || minusJchecking || minusJhorChecking || plusJhorchecking;
             if(ret)
             {
                 winWayRed.Enqueue(findButtonByIndex(i, j));
@@ -531,7 +422,7 @@ namespace HexGameProject
             }
             return null;
         }
-        public bool redCheckingWinnerUp(int i, int j,int depth)
+        public bool redCheckingWinnerUp(int i, int j)
         {
             int plusJ = j + 1;
             int minusJ = j - 1;
@@ -540,7 +431,7 @@ namespace HexGameProject
             bool plusJhorChecking = false;
             bool minusJhorChecking = false;
 
-            if (i == depth)//-1
+            if (i == -1)
             {
                 return true;
             }
@@ -555,21 +446,21 @@ namespace HexGameProject
             }
             if (plusJ >= 0 && plusJ <= 10)
             {
-                plusJchecking = redCheckingWinnerUp(i - 1, j + 1,depth);
+                plusJchecking = redCheckingWinnerUp(i - 1, j + 1);
                 if (bord[i, j + 1] == "red" && isChekedBord[i, j + 1] == false)
                 {
-                    plusJhorChecking = redCheckingWinnerUp(i, j + 1,depth);
+                    plusJhorChecking = redCheckingWinnerUp(i, j + 1);
                 }
             }
             if (minusJ >= 0 && minusJ <= 10)
             {
-                minusJchecking = redCheckingWinnerUp(i - 1, j - 1,depth);
+                minusJchecking = redCheckingWinnerUp(i - 1, j - 1);
                 if (bord[i, j - 1] == "red" && isChekedBord[i, j - 1] == false)
                 {
-                    minusJhorChecking = redCheckingWinnerUp(i, j - 1,depth);
+                    minusJhorChecking = redCheckingWinnerUp(i, j - 1);
                 }
             }
-            bool ret= plusJchecking || redCheckingWinnerUp(i - 1, j,depth) || minusJchecking || minusJhorChecking || plusJhorChecking;
+            bool ret = plusJchecking || redCheckingWinnerUp(i - 1, j) || minusJchecking || minusJhorChecking || plusJhorChecking;
             if (ret)
             {
                 winWayRed.Enqueue(findButtonByIndex(i, j));
@@ -577,7 +468,7 @@ namespace HexGameProject
             return ret;
         }
 
-        private bool blueCheckingWinnerLeft(int i, int j,int depth)
+        private bool blueCheckingWinnerLeft(int i, int j)
         {
             int plusI = i + 1;
             int minusI = i - 1;
@@ -585,7 +476,7 @@ namespace HexGameProject
             bool minusIchecking = false;
             bool minusJverChecking = false;
             bool plusJverChecking = false;
-            if (j == depth)
+            if (j == 11)
             {
                 return true;
             }
@@ -600,21 +491,21 @@ namespace HexGameProject
             }
             if (plusI >= 0 && plusI <= 10)
             {
-                plusIchecking = blueCheckingWinnerLeft(i + 1, j + 1,depth);
+                plusIchecking = blueCheckingWinnerLeft(i + 1, j + 1);
                 if (bord[i + 1, j] == "blue" && isChekedBord[i + 1, j] == false)
                 {
-                    plusJverChecking = blueCheckingWinnerLeft(i + 1, j,depth);
+                    plusJverChecking = blueCheckingWinnerLeft(i + 1, j);
                 }
             }
             if (minusI >= 0 && minusI <= 10)
             {
-                minusIchecking = blueCheckingWinnerLeft(i - 1, j + 1,depth);
+                minusIchecking = blueCheckingWinnerLeft(i - 1, j + 1);
                 if (bord[i - 1, j] == "blue" && isChekedBord[i - 1, j] == false)
                 {
-                    minusJverChecking = blueCheckingWinnerLeft(i - 1, j,depth);
+                    minusJverChecking = blueCheckingWinnerLeft(i - 1, j);
                 }
             }
-            bool ret= plusIchecking || blueCheckingWinnerLeft(i, j + 1,depth) || minusIchecking || minusJverChecking || plusJverChecking;
+            bool ret= plusIchecking || blueCheckingWinnerLeft(i, j + 1) || minusIchecking || minusJverChecking || plusJverChecking;
             if (ret)
             {
                 winWayBlue.Enqueue(findButtonByIndex(i, j));
@@ -622,7 +513,7 @@ namespace HexGameProject
             return ret;
         }
 
-        public bool blueCheckingWinnerRight(int i, int j,int depth)
+        public bool blueCheckingWinnerRight(int i, int j)
         {
             int plusI = i + 1;
             int minusI = i - 1;
@@ -630,7 +521,7 @@ namespace HexGameProject
             bool minusIcheking = false;
             bool minusJverChecking = false;
             bool plusJverChecking = false;
-            if (j == depth)//-1
+            if (j == -1)//-1
             {
                 return true;
             }
@@ -645,21 +536,21 @@ namespace HexGameProject
             }
             if (plusI >= 0 && plusI <= 10)
             {
-                plusIcheking = blueCheckingWinnerRight(i + 1, j - 1,depth);
+                plusIcheking = blueCheckingWinnerRight(i + 1, j - 1);
                 if (bord[i + 1, j] == "blue" && isChekedBord[i + 1, j] == false)
                 {
-                    plusJverChecking = blueCheckingWinnerRight(i + 1, j,depth);
+                    plusJverChecking = blueCheckingWinnerRight(i + 1, j);
                 }
             }
             if (minusI >= 0 && minusI <= 10)
             {
-                minusIcheking = blueCheckingWinnerRight(i - 1, j - 1,depth);
+                minusIcheking = blueCheckingWinnerRight(i - 1, j - 1);
                 if (bord[i - 1, j] == "blue" && isChekedBord[i - 1, j] == false)
                 {
-                    minusJverChecking = blueCheckingWinnerRight(i - 1, j,depth);
+                    minusJverChecking = blueCheckingWinnerRight(i - 1, j);
                 }
             }
-            bool ret= plusIcheking || blueCheckingWinnerRight(i, j - 1,depth) || minusIcheking || plusJverChecking || minusJverChecking;
+            bool ret= plusIcheking || blueCheckingWinnerRight(i, j - 1) || minusIcheking || plusJverChecking || minusJverChecking;
             if (ret)
             {
                 winWayBlue.Enqueue(findButtonByIndex(i, j));

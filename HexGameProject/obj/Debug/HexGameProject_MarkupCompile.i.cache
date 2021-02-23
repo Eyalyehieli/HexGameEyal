@@ -4,15 +4,15 @@
 winexe
 C#
 .cs
-C:\Eyal Yehieli\הנדסאי יג\HexProject\HexGameProject\HexGameProject\obj\Debug\
+C:\HexGame\HexGameProject\obj\Debug\
 HexGameProject
 none
 false
 DEBUG;TRACE
-C:\Eyal Yehieli\הנדסאי יג\HexProject\HexGameProject\HexGameProject\App.xaml
+C:\HexGame\HexGameProject\App.xaml
 5-458925499
 
-10-1282121762
+111137760811
 13-1505183044
 Game1vs1.xaml;Game1vsCom.xaml;Levels.xaml;MainWindow.xaml;WinnerMessage.xaml;
 

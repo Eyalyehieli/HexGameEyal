@@ -75,6 +75,7 @@
     <Compile Include="Game1vsCom.xaml.cs">
       <DependentUpon>Game1vsCom.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Position.cs" />
     <Compile Include="WinnerMessage.xaml.cs">
       <DependentUpon>WinnerMessage.xaml</DependentUpon>
     </Compile>
