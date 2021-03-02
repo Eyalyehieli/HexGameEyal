@@ -62,6 +62,7 @@ namespace HexGameProject
            
             int row = Grid.GetRow(sender as Button);
             int column = Grid.GetColumn(sender as Button);
+            column = column - 10 + row;
             bord[row, column] = this.colorPlayer;
             paintingButton(sender as Button);
             winner = thereIsWinner(sender as Button);
@@ -131,12 +132,15 @@ namespace HexGameProject
         private string thereIsWinner(Button button)
         {
             resetIsCheckedBord();
+            int column, row;
             bool redWinnerUp = false, redWinnerDown = false, blueWinnerLeft = false, blueWinnerRight = false;
             if (this.colorPlayer=="red")
             {
-                redWinnerUp = redCheckingWinnerUp(Grid.GetRow(button), Grid.GetColumn(button));
-                isChekedBord[Grid.GetRow(button), Grid.GetColumn(button)] = false;
-                redWinnerDown = redCheckingWinnerDown(Grid.GetRow(button), Grid.GetColumn(button));
+                row = Grid.GetRow(button);
+                column = Grid.GetColumn(button) - 10 + row;
+                redWinnerUp = redCheckingWinnerUp(row, column);
+                isChekedBord[row, column] = false;
+                redWinnerDown = redCheckingWinnerDown(row, column);
                 if(redWinnerDown&&redWinnerUp)
                 {
                     return "red";
@@ -151,9 +155,11 @@ namespace HexGameProject
             }
             else
             {
-                blueWinnerLeft = blueCheckingWinnerLeft(Grid.GetRow(button), Grid.GetColumn(button));
-                isChekedBord[Grid.GetRow(button), Grid.GetColumn(button)] = false;
-                blueWinnerRight = blueCheckingWinnerRight(Grid.GetRow(button), Grid.GetColumn(button));
+                row = Grid.GetRow(button);
+                column = Grid.GetColumn(button) - 10 + row;
+                blueWinnerLeft = blueCheckingWinnerLeft(row,column);
+                isChekedBord[row,column] = false;
+                blueWinnerRight = blueCheckingWinnerRight(row,column);
                 if(blueWinnerLeft&&blueWinnerRight)
                 {
                     return "blue";
@@ -199,16 +205,16 @@ namespace HexGameProject
             }
             if (minusJ >= 0 && minusJ <= 10)
             {
-                minusJchecking = redCheckingWinnerDown(i + 1, j - 1);
+                //minusJchecking = redCheckingWinnerDown(i + 1, j - 1);
                 if (bord[i, j - 1] == "red" && isChekedBord[i, j - 1] == false)
                 {
                     minusJhorChecking = redCheckingWinnerDown(i, j - 1);
                 }
             }
-           bool ret= plusJchecking || redCheckingWinnerDown(i + 1, j) || minusJchecking || minusJhorChecking || plusJhorchecking;
+           bool ret= plusJchecking || redCheckingWinnerDown(i + 1, j) || /*minusJchecking ||*/ minusJhorChecking || plusJhorchecking;
            if(ret)
             {
-                winWayRed.Enqueue(findButtonByIndex(i, j));
+                winWayRed.Enqueue(findButtonByIndex(i, 10-i+j));
             }
             return ret;
         }
@@ -248,7 +254,7 @@ namespace HexGameProject
             }
             if (plusJ >= 0 && plusJ <= 10)
             {
-                plusJchecking = redCheckingWinnerUp(i - 1, j + 1);
+                //plusJchecking = redCheckingWinnerUp(i - 1, j + 1);
                 if (bord[i, j + 1] == "red" && isChekedBord[i, j + 1] == false)
                 {
                     plusJhorChecking = redCheckingWinnerUp(i, j + 1);
@@ -262,10 +268,10 @@ namespace HexGameProject
                     minusJhorChecking = redCheckingWinnerUp(i, j - 1);
                 }
             }
-            bool ret= plusJchecking || redCheckingWinnerUp(i - 1, j) || minusJchecking || minusJhorChecking || plusJhorChecking;
+            bool ret= /*plusJchecking ||*/ redCheckingWinnerUp(i - 1, j) || minusJchecking || minusJhorChecking || plusJhorChecking;
             if (ret)
             {
-                winWayRed.Enqueue(findButtonByIndex(i, j));
+                winWayRed.Enqueue(findButtonByIndex(i, 10 - i + j));
             }
             return ret;
         }
@@ -301,16 +307,16 @@ namespace HexGameProject
             }
             if (minusI >= 0 && minusI <= 10)
             {
-                minusIchecking = blueCheckingWinnerLeft(i - 1, j + 1);
+                //minusIchecking = blueCheckingWinnerLeft(i - 1, j + 1);
                 if (bord[i - 1, j] == "blue" && isChekedBord[i - 1, j] == false)
                 {
                     minusJverChecking = blueCheckingWinnerLeft(i - 1, j);
                 }
             }
-            bool ret= plusIchecking || blueCheckingWinnerLeft(i, j + 1) || minusIchecking || minusJverChecking || plusJverChecking;
+            bool ret= plusIchecking || blueCheckingWinnerLeft(i, j + 1) || /*minusIchecking ||*/ minusJverChecking || plusJverChecking;
             if(ret)
             {
-                winWayBlue.Enqueue(findButtonByIndex(i, j));
+                winWayBlue.Enqueue(findButtonByIndex(i, 10 - i + j));
             }
             return ret;
         }
@@ -338,7 +344,7 @@ namespace HexGameProject
             }
             if (plusI >= 0 && plusI <= 10)
             {
-                plusIcheking = blueCheckingWinnerRight(i + 1, j - 1);
+                //plusIcheking = blueCheckingWinnerRight(i + 1, j - 1);
                 if (bord[i + 1, j] == "blue" && isChekedBord[i + 1, j] == false)
                 {
                     plusJverChecking = blueCheckingWinnerRight(i + 1, j);
@@ -352,10 +358,10 @@ namespace HexGameProject
                     minusJverChecking = blueCheckingWinnerRight(i - 1, j);
                 }
             }
-            bool ret= plusIcheking || blueCheckingWinnerRight(i, j - 1) || minusIcheking || plusJverChecking || minusJverChecking;
+            bool ret= /*plusIcheking ||*/ blueCheckingWinnerRight(i, j - 1) || minusIcheking || plusJverChecking || minusJverChecking;
             if (ret)
             {
-                winWayBlue.Enqueue(findButtonByIndex(i, j));
+                winWayBlue.Enqueue(findButtonByIndex(i, 10 - i + j));
             }
             return ret;
         }
@@ -413,7 +419,8 @@ namespace HexGameProject
                 { 
                     b.IsEnabled = true;
                     b.Background = Brushes.White;
-                    bord[Grid.GetRow(b), Grid.GetColumn(b)] = null;
+                    bord[Grid.GetRow(b), Grid.GetColumn(b)-10+ Grid.GetRow(b)] = null;
+                    
                 }
             }
         }
